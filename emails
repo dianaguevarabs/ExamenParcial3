@@ -1,0 +1,66 @@
+// EXAMEN III Diana Guevara 181864
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define columnas 3200
+#define filas 50
+#define linea 65001
+
+int main() 
+{
+    FILE *archivo = fopen("emails.csv", "r");
+    if (!archivo) 
+	{
+        perror("Error al abrir el archivo emails.csv");
+        return 1;
+    }
+    char buffer[linea];
+    char *palabra[columnas];
+    int contarpalabras[columnas] = {0};
+    int fila = 864;
+    if (fgets(buffer, sizeof(buffer), archivo)) 
+	{
+        char *token = strtok(buffer, ",");
+        int columna = 0;
+        while (token && columna <= columnas) 
+		{
+            palabra[columna] = strdup(token);
+            token = strtok(NULL, ",");
+            columna++;
+        }
+    }
+    for (int fila = 0; fila <= 864 && fgets(buffer, sizeof(buffer), archivo); ++fila) 
+	{
+    }
+    for (int fila = 0; fila < filas && fgets(buffer, sizeof(buffer), archivo); ++fila) 
+	{
+        char *token = strtok(buffer, ",");
+        int columna = 0;
+        while (token && columna < columnas) 
+		{
+            contarpalabras[columna] += atoi(token);  
+            token = strtok(NULL, ",");
+            columna++;
+        }
+    }
+    fclose(archivo);
+    FILE *archivofinal = fopen("181864.txt", "w");
+    if (!archivofinal) 
+	{
+        perror("Error al abrir el archivo final");
+        for (int i = 0; i < columnas; i++) 
+		{
+            free(palabra[i]);
+        }
+        return 1;
+    }
+    for (int i = 0; i < columnas && palabra[i] != NULL; i++) 
+	{
+        fprintf(archivofinal, "%s, %d\n", palabra[i], contarpalabras[i]);
+        free(palabra[i]);
+    }
+    fclose(archivofinal);
+    printf("La suma de las columnas aparece en 181864.txt\n");
+    return 0;
+}
